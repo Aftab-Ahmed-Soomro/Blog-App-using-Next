@@ -41,7 +41,7 @@ const Dashboard = () => {
         const fetchBlogs = async () => {
             if (session && session.user) { // Check if session and user exist
                 const { data, error } = await supabase
-                    .from('blogs')
+                    .from('BlogApp')
                     .select('*')
                     .eq('user_id', session.user.id); // Use session.user.id safely
 
