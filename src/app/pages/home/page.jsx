@@ -1,8 +1,8 @@
 "use client";
 
+import Header from '@/app/modules/Header/page';
 import { supabase } from '@/app/utils/supabaseClient';
 import React, { useEffect, useState } from 'react';
-import Header from '@/app/modules/Header/page';
 
 const Home = () => {
   const [blogs, setBlogs] = useState([]);

@@ -25,6 +25,12 @@ const Dashboard = () => {
     const { session, signOut } = UserAuth();
     const router = useRouter();
 
+    useEffect(() => {
+        if (!session) {
+            router.push('/pages/login'); // Redirect to login page
+        }
+    }, [session, router]);
+
     const [blogs, setBlogs] = useState([]);
     const [open, setOpen] = useState(false);
     const [title, setTitle] = useState('');
@@ -33,15 +39,27 @@ const Dashboard = () => {
 
     useEffect(() => {
         const fetchBlogs = async () => {
-            const { data, error } = await supabase.from('BlogApp').select('*');
-            if (error) console.error('Error fetching blogs:', error);
-            else setBlogs(data);
+            if (session && session.user) { // Check if session and user exist
+                const { data, error } = await supabase
+                    .from('blogs')
+                    .select('*')
+                    .eq('user_id', session.user.id); // Use session.user.id safely
+
+                if (error) {
+                    console.error("Error fetching blogs:", error);
+                } else {
+                    setBlogs(data);
+                }
+            } else {
+                console.error("User is not authenticated or session is null");
+            }
         };
+
         fetchBlogs();
-    }, []);
+    }, [session]); // Add session as a dependency
 
     const handleDelete = async (id) => {
-        const { error } = await supabase.from('BlogApp').delete().match({ id });
+        const { error } = await supabase.from('BlogApp').delete().match({ id, user_id: session.user.id }); // Ensure the blog belongs to the user
         if (error) {
             console.error('Error deleting record:', error);
         } else {
@@ -82,7 +100,7 @@ const Dashboard = () => {
             const { error } = await supabase
                 .from('BlogApp')
                 .update({ title, content })
-                .match({ id: editingId });
+                .match({ id: editingId, user_id: session.user.id }); // Ensure the blog belongs to the user
 
             if (error) {
                 console.error('Error updating blog:', error);
@@ -92,12 +110,13 @@ const Dashboard = () => {
             }
         } else {
             // Add new blog
-            const { error } = await supabase.from('BlogApp').insert([{ title, content }]);
+            // const { error } = await supabase.from('BlogApp').insert([{ title, content, user_id: session.user.id }]); // Associate the new blog with the user
+            const { error } = await supabase.from('BlogApp').insert([{ title, content, user_id: session.user.id }]);
             if (error) {
                 console.error('Error adding blog:', error);
             } else {
                 toast.success("Blog added successfully");
-                setBlogs([...blogs, { id: Date.now(), title, content }]);
+                setBlogs([...blogs, { id: Date.now(), title, content, user_id: session.user.id }]); // Include user_id for consistency
             }
         }
         setTitle('');
@@ -114,9 +133,9 @@ const Dashboard = () => {
                     </h1>
                 </Link>
                 <div className='flex gap-4 lg:gap-6 mt-2 lg:mt-0'>
-                        <button onClick={() => handleOpen()} className='rounded px-4 py-2 text-white border border-white transition duration-200 hover:bg-white hover:text-black'>
-                            Add Blogs
-                        </button>
+                    <button onClick={() => handleOpen()} className='rounded px-4 py-2 text-white border border-white transition duration-200 hover:bg-white hover:text-black'>
+                        Add Blogs
+                    </button>
                     <button
                         onClick={handleSignOut}
                         className='rounded px-4 py-2 text-white border border-white transition duration-200 hover:bg-white hover:text-black'>

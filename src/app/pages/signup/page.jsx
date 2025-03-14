@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { Router } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { UserAuth } from '@/app/context/AuthContext';
 import Header from '@/app/modules/Header/page';
 
@@ -11,18 +11,18 @@ const Signup = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState("");
+    const router = useRouter();
 
     const handleSignUp = async (e) => {
         e.preventDefault();
-        try {
-            const result = await signUpNewUser(email, password);
-            if (result.success) {
-                Router.push('/pages/dashboard');
-            }
-        } catch (err) {
-            setError("An error occurred");
+        const result = await signUpNewUser(email, password);
+        if (result.success) {
+            router.push('/pages/dashboard');
+        } else {
+            setError(result.error.message || "An error occurred");
         }
     };
+    
 
     return (
         <>

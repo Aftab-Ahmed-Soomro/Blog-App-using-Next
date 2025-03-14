@@ -1,10 +1,10 @@
 "use client";
 
 import { UserAuth } from '@/app/context/AuthContext';
+import Header from '@/app/modules/Header/page';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
-import Header from '@/app/modules/Header/page';
 
 const Login = () => {
     const router = useRouter();
