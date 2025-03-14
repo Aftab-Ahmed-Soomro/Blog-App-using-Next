@@ -114,12 +114,9 @@ const Dashboard = () => {
                     </h1>
                 </Link>
                 <div className='flex gap-4 lg:gap-6 mt-2 lg:mt-0'>
-                    <Button onClick={() => handleOpen()}>Add Blogs</Button>
-                    <Link href='/login'>
-                        <button className='rounded px-4 py-2 text-white border border-white transition duration-200 hover:bg-white hover:text-black'>
-                            All Blogs
+                        <button onClick={() => handleOpen()} className='rounded px-4 py-2 text-white border border-white transition duration-200 hover:bg-white hover:text-black'>
+                            Add Blogs
                         </button>
-                    </Link>
                     <button
                         onClick={handleSignOut}
                         className='rounded px-4 py-2 text-white border border-white transition duration-200 hover:bg-white hover:text-black'>
