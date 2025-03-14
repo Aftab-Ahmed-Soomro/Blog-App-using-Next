@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { Router } from 'next/navigation';
 import { UserAuth } from '@/app/context/AuthContext';
+import Header from '@/app/modules/Header/page';
 
 const Signup = () => {
     const { signUpNewUser } = UserAuth();
@@ -24,6 +25,8 @@ const Signup = () => {
     };
 
     return (
+        <>
+        <Header />
         <div className='flex flex-col items-center justify-center h-screen p-4'>
             <h1 className='text-4xl font-semibold mb-4'>Account Signup</h1>
             <form onSubmit={handleSignUp} className='w-full max-w-md space-y-4'>
@@ -69,6 +72,7 @@ const Signup = () => {
                 </Link>
             </p>
         </div>
+        </>
     );
 }
 
