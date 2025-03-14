@@ -97,7 +97,7 @@ const Dashboard = () => {
                 console.error('Error adding blog:', error);
             } else {
                 toast.success("Blog added successfully");
-                setBlogs([...blogs, { title, content }]);
+                setBlogs([...blogs, { id: Date.now(), title, content }]);
             }
         }
         setTitle('');
