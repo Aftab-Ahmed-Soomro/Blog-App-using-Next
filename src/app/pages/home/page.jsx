@@ -2,6 +2,7 @@
 
 import { supabase } from '@/app/utils/supabaseClient';
 import React, { useEffect, useState } from 'react';
+import Header from '@/app/modules/Header/page';
 
 const Home = () => {
   const [blogs, setBlogs] = useState([]);
@@ -16,6 +17,8 @@ const Home = () => {
   }, []);
 
   return (
+    <>
+    <Header />
     <div className='h-[calc(100vh-142px)] flex flex-col justify-start items-center font-semibold bg-gray-100 p-6 overflow-y-scroll'>
       <div className='py-6 flex flex-col items-center'>
         <h1 className='text-4xl font-bold text-gray-800'>Aftab's Blogs</h1>
@@ -35,6 +38,7 @@ const Home = () => {
         ))}
       </div>
     </div>
+    </>
   );
 };
 
