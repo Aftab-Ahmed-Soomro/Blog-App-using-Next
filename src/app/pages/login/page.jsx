@@ -4,6 +4,7 @@ import { UserAuth } from '@/app/context/AuthContext';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
+import Header from '@/app/modules/Header/page';
 
 const Login = () => {
     const router = useRouter();
@@ -27,6 +28,8 @@ const Login = () => {
     };
 
     return (
+        <>
+        <Header />
         <div className='flex flex-col items-center justify-center h-screen p-4'>
             <h1 className='text-4xl font-semibold mb-4'>Account Login</h1>
             <form onSubmit={handleSignIn} className='w-full max-w-md space-y-4'>
@@ -72,6 +75,7 @@ const Login = () => {
                 </Link>
             </p>
         </div>
+        </>
     );
 }
 
