@@ -1,13 +1,13 @@
-"use client";
+"use client"
 
 import React, { useState, useEffect } from 'react';
+import Link from 'next/link';
 import { Box, Button, Modal } from '@mui/material';
-import { MdDelete, MdEdit } from "react-icons/md";
+import { MdDelete, MdEdit } from 'react-icons/md';
 import { toast, ToastContainer } from 'react-toastify';
+import { useRouter } from 'next/navigation';
 import { UserAuth } from '@/app/context/AuthContext';
 import { supabase } from '@/app/utils/supabaseClient';
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 
 const style = {
     position: 'absolute',
@@ -22,8 +22,8 @@ const style = {
 };
 
 const Dashboard = () => {
-    const router = useRouter();
     const { session, signOut } = UserAuth();
+    const router = useRouter();
 
     const [blogs, setBlogs] = useState([]);
     const [open, setOpen] = useState(false);
@@ -34,23 +34,16 @@ const Dashboard = () => {
     useEffect(() => {
         const fetchBlogs = async () => {
             const { data, error } = await supabase.from('BlogApp').select('*');
-            if (error) {
-                console.error('Error fetching blogs:', error);
-                toast.error('Failed to fetch blogs');
-            } else {
-                setBlogs(data);
-            }
+            if (error) console.error('Error fetching blogs:', error);
+            else setBlogs(data);
         };
         fetchBlogs();
     }, []);
 
     const handleDelete = async (id) => {
-        const { data, error } = await supabase.from('BlogApp').delete().match({ id });
-        console.log('Delete response:', { data, error });
-
+        const { error } = await supabase.from('BlogApp').delete().match({ id });
         if (error) {
             console.error('Error deleting record:', error);
-            toast.error('Failed to delete blog');
         } else {
             setBlogs(blogs.filter(blog => blog.id !== id));
             toast.success("Blog Deleted Successfully");
@@ -64,7 +57,6 @@ const Dashboard = () => {
             router.push('/');
         } catch (error) {
             console.error(error);
-            toast.error('Failed to sign out');
         }
     };
 
@@ -94,7 +86,6 @@ const Dashboard = () => {
 
             if (error) {
                 console.error('Error updating blog:', error);
-                toast.error('Failed to update blog');
             } else {
                 setBlogs(blogs.map(blog => (blog.id === editingId ? { ...blog, title, content } : blog)));
                 toast.success("Blog updated successfully");
@@ -104,10 +95,9 @@ const Dashboard = () => {
             const { error } = await supabase.from('BlogApp').insert([{ title, content }]);
             if (error) {
                 console.error('Error adding blog:', error);
-                toast.error('Failed to add blog');
             } else {
-                setBlogs([...blogs, { title, content }]); // Add the new blog
                 toast.success("Blog added successfully");
+                setBlogs([...blogs, { title, content }]);
             }
         }
         setTitle('');
@@ -118,14 +108,14 @@ const Dashboard = () => {
     return (
         <div>
             <div className='bg-black flex items-center justify-between p-4 flex-wrap'>
-                <Link href={'/'}>
+                <Link href='/'>
                     <h1 className='text-white font-bold text-xl lg:text-3xl cursor-pointer'>
                         BLOGS BY AFTAB
                     </h1>
                 </Link>
                 <div className='flex gap-4 lg:gap-6 mt-2 lg:mt-0'>
                     <Button onClick={() => handleOpen()}>Add Blogs</Button>
-                    <Link href={'/pages/login'}>
+                    <Link href='/login'>
                         <button className='rounded px-4 py-2 text-white border border-white transition duration-200 hover:bg-white hover:text-black'>
                             All Blogs
                         </button>
@@ -155,13 +145,10 @@ const Dashboard = () => {
                             <h3 className='text-2xl font-bold text-gray-900'>{blog.title}</h3>
                             <h2 className='text-xl font-semibold text-gray-800 mt-4'>Content:</h2>
                             <p className='text-gray-700'>{blog.content}</p>
-                            <p className='text-gray-500 text-sm mt-2'>
-                                {blog.created_at ? new Date(blog.created_at).toLocaleString() : 'Date not available'}
-                            </p>
+                            <p className='text-gray-500 text-sm mt-2'>{new Date(blog.created_at).toLocaleString()}</p>
                         </div>
                     ))}
                 </div>
-
                 {/* Modal */}
                 <Modal
                     open={open}
